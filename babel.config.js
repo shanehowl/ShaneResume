@@ -14,6 +14,10 @@ module.exports = {
         alias: {
           tests: ['./tests/'],
           '@components': './src/components',
+          '@pages': './src/pages',
+          '@contexts': './src/contexts',
+          '@constants': './src/constants',
+          '@models': './src/models',
         },
       },
     ],
