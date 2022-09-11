@@ -2,42 +2,24 @@
  * @format
  */
 
-import 'react-native-gesture-handler';
-import {
-  NavigationContainer,
-  DarkTheme as NavigationDarkTheme,
-  DefaultTheme as NavigationDefaultTheme,
-} from '@react-navigation/native';
 import * as React from 'react';
+import 'react-native-gesture-handler';
 import { AppRegistry } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import {
-  Provider as PaperProvider,
-  DarkTheme as PaperDarkTheme,
-  DefaultTheme as PaperDefaultTheme,
-} from 'react-native-paper';
+import { configureFonts, Provider as PaperProvider } from 'react-native-paper';
 
-import { name as appName } from './app.json';
-import { PreferencesContext } from 'contexts/PreferencesContext';
-import { SHeader } from 'components/SHeader';
 import { Routes } from 'constants/Routes';
+import { name as appName } from './app.json';
+import { SHeader } from 'components/SHeader';
+import { PreferencesContext } from 'contexts/PreferencesContext';
 
-const CombinedDefaultTheme = {
-  ...PaperDefaultTheme,
-  ...NavigationDefaultTheme,
-  colors: {
-    ...PaperDefaultTheme.colors,
-    ...NavigationDefaultTheme.colors,
-  },
-};
-const CombinedDarkTheme = {
-  ...PaperDarkTheme,
-  ...NavigationDarkTheme,
-  colors: {
-    ...PaperDarkTheme.colors,
-    ...NavigationDarkTheme.colors,
-  },
-};
+import {
+  CombinedDarkTheme,
+  CombinedDefaultTheme,
+  fontConfig,
+} from 'constants/Themes';
+import { PageName } from 'models/enums';
 
 const Stack = createStackNavigator();
 
@@ -45,6 +27,10 @@ export default function Main() {
   const [isThemeDark, setIsThemeDark] = React.useState(false);
 
   let theme = isThemeDark ? CombinedDarkTheme : CombinedDefaultTheme;
+  theme = {
+    ...theme,
+    fonts: configureFonts(fontConfig),
+  };
 
   const toggleTheme = React.useCallback(() => {
     return setIsThemeDark(!isThemeDark);
@@ -62,17 +48,21 @@ export default function Main() {
       <PaperProvider theme={theme}>
         <NavigationContainer theme={theme}>
           <Stack.Navigator
-            initialRouteName={Routes.Home.label}
+            initialRouteName={Routes.Landing.label}
             screenOptions={{
               header: props => <SHeader {...props} />,
             }}>
             {Object.keys(Routes).map(key => {
               const route = Routes[key];
+              const isHeaderShown = key !== PageName.Landing;
               return (
                 <Stack.Screen
                   key={key}
                   name={route.label}
                   component={route.component}
+                  options={{
+                    headerShown: isHeaderShown,
+                  }}
                 />
               );
             })}

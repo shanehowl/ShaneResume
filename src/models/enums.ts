@@ -1,4 +1,4 @@
 export enum PageName {
-  'Home' = 'Home',
+  'Landing' = 'Landing',
   'ContactMe' = 'ContactMe',
 }
